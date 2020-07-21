@@ -9,9 +9,15 @@ class CPU:
         """Construct a new CPU."""
 
         #initialize 
-        self.memory = [0] * 256
-        self.register = [0] * 8
-        self.pc = 0
+        self.ram = [0] * 256        #256 bytes of memory
+        self.reg = [0] * 8      # 8 registers to store data
+        self.pc = 0     #program counter acts as a pointer
+    
+    def ram_read(self, MAR):    # (MAR) Memory Address Register holds memory address/position we're reading from 
+        return self.ram[MAR]
+    
+    def ram_write(self, MAR, MDR):      
+        self.ram[MAR] = MDR # (MAR) Memory Data Register is the data getting written into the MAR. LS8-spec.md file
 
     def load(self):
         """Load a program into memory."""
@@ -35,7 +41,7 @@ class CPU:
             address += 1
 
 
-    def alu(self, op, reg_a, reg_b):
+    def alu(self, op, reg_a, reg_b):        #arithmetic logic unit- responsible for math
         """ALU operations."""
 
         if op == "ADD":
@@ -67,3 +73,43 @@ class CPU:
     def run(self):
         """Run the CPU."""
         pass
+
+        running = True
+
+        instructions ={
+             0b10000010: 'LDI',
+             0b01000111: 'PRN',
+             0b00000001: 'HLT'
+        }
+
+        while running: 
+            i = self.ram[self.pc]       #single instruction that pc is pointing to in the ram(memory)
+
+            if instructions[i] == 'LDI':
+                #set up register
+                reg_num = self.ram[self.pc + 1]
+                value = self.ram[self.pc + 2]
+                #save value to register
+                self.reg[reg_num] = value
+
+                self.pc +=3
+            
+            elif instructions[i] == 'PRN':
+                #print the register
+                reg_num = self.ram[self.pc +1]
+                print(self.reg[reg_num])
+
+                self.pc +=2
+            
+            elif instructions[i] == 'HLT':
+                #halt 
+                running = False
+
+            else: 
+                print(f"Unknown instruction {i}")
+
+
+
+testCPU = CPU()
+testCPU.load()
+testCPU.run()
