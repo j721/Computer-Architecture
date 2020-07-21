@@ -83,7 +83,7 @@ class CPU:
         }
 
         while running: 
-            i = self.ram[self.pc]       #single instruction that pc is pointing to in the ram(memory)
+            i = self.ram[self.pc]       #single instruction that pc is pointing to in the ram(memory). Pc is pointing to the current instruction
 
             if instructions[i] == 'LDI':
                 #set up register
