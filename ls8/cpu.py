@@ -69,7 +69,8 @@ class CPU:
         if op == "ADD":
             self.reg[reg_a] += self.reg[reg_b]
         #elif op == "SUB": etc
-        elif op == "MUL":
+
+        elif op == "MUL":               #multiply instruction
             self.reg[reg_a] *= self.reg[reg_b]
         else:
             raise Exception("Unsupported ALU operation")
@@ -103,7 +104,8 @@ class CPU:
         instructions ={
              0b10000010: 'LDI',
              0b01000111: 'PRN',
-             0b00000001: 'HLT'
+             0b00000001: 'HLT',
+             0b10100010: 'MUL'
         }
 
         while running: 
