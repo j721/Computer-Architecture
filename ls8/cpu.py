@@ -33,7 +33,7 @@ class CPU:
                 for line in f:
                     try:
                         line = line.split("#",1)[0]
-                        line = int(line, 10)  # int() is base 10 by default
+                        line = int(line, 2)  # int() is base 10 by default
                         self.ram[address] = line
                         address += 1
                     except ValueError:
@@ -42,9 +42,6 @@ class CPU:
         except FileNotFoundError:
             print(f"Couldn't find file {sys.argv[1]}")
             sys.exit(1)
-
-
-        
 
         # For now, we've just hardcoded a program:
 
