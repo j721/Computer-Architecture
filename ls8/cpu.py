@@ -128,6 +128,14 @@ class CPU:
             elif instructions[i] == 'HLT':
                 #halt 
                 running = False
+            
+            elif instructions[i] == 'MUL':
+                reg_a = self.ram[self.pc + 1]
+                reg_b = self.ram[self.pc + 2]
+
+                self.alu('MUL', reg_a, reg_b)
+
+                self.pc +=3
 
             else: 
                 print(f"Unknown instruction {i}")
