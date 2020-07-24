@@ -98,7 +98,6 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
-        pass
 
         running = True
 
@@ -108,7 +107,11 @@ class CPU:
              0b00000001: 'HLT',
              0b10100010: 'MUL',
              0b01000110: 'POP',
-             0b01000101: 'PUSH' 
+             0b01000101: 'PUSH',
+             0b01010000: 'CALL',
+             0b00010001: 'RET' ,
+             0b10100000: 'ADD' 
+
         }
 
         while running: 
@@ -142,6 +145,14 @@ class CPU:
 
                 self.pc +=3
             
+            elif instructions[i] == 'ADD':
+                reg_a = self.ram[self.pc + 1]
+                reg_b = self.ram[self.pc + 2]
+
+                self.alu('ADD', reg_a, reg_b)
+
+                self.pc +=3
+            
             elif instructions[i] == 'POP':
                 address_to_pop_from = self.reg[SP]
                 value = self.ram[address_to_pop_from]
@@ -165,13 +176,35 @@ class CPU:
                 self.ram[address_to_push_from] = value
 
                 self.pc += 2
+            
+            elif instructions[i] == 'CALL':
+                # Get address of the next instruction
+                return_addr = self.pc + 2 
+                # Push that on the stack
+                self.reg[SP] -= 1
+                address_to_push_to = self.reg[SP]
+                self.ram[address_to_push_to] = return_addr
 
+                # Set the PC to the subroutine address
+                reg_num = self.ram[self.pc + 1]
+                subroutine_addr = self.reg[reg_num]
 
+                self.pc = subroutine_addr
+
+            elif instructions[i] == 'RET':
+                # Get return address from the top of the stack
+                address_to_pop_from = self.reg[SP]
+                return_addr = self.ram[address_to_pop_from]
+                self.reg[SP] += 1
+
+                # Set the PC to the return address
+                self.pc = return_addr
+  
             else: 
                 print(f"Unknown instruction {i}")
 
 
 
-testCPU = CPU()
-testCPU.load()
+# testCPU = CPU()
+# testCPU.load()
 # testCPU.run()
